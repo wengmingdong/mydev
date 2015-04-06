@@ -19,6 +19,7 @@ public class FieldBean implements java.io.Serializable {
 	//private static final Map fieldJavaType = new 
 	private String fieldName;
 	private Class fieldType;
+	private String fieldTypeStr;
 	private String comment;
 	private boolean primaryKey;
 	public String getFieldName() {
@@ -48,7 +49,12 @@ public class FieldBean implements java.io.Serializable {
 	}
 	
 	public String getFieldTypeStr() {
-		return fieldType.getName();
+		if (fieldTypeStr == null)
+			return fieldType.getSimpleName();
+		return fieldTypeStr;
 	}
 	
+	public void setFieldTypeStr(String fieldTypeStr) {
+		this.fieldTypeStr = fieldTypeStr;
+	}
 }

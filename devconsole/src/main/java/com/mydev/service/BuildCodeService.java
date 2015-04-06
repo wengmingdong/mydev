@@ -23,6 +23,6 @@ import com.mydev.entity.rt.CreateCodeResultBean;
 public interface BuildCodeService {
 	public void connect(String node, String username, String password, String keyspace);
 	public List<TableBean> getTables();
-	public List<CreateCodeResultBean> createCode(List<String> tableNames) throws Exception;
-	public CreateCodeResultBean createCode( String tableName) throws Exception;
+	public List<CreateCodeResultBean> createCode(String creater, String packageName,  List<String> tableNames) throws Exception;
+	public CreateCodeResultBean createCode(String creater, String packageName, String tableName) throws Exception;
 }

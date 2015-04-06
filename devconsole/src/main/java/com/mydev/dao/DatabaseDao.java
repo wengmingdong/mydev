@@ -28,5 +28,5 @@ public interface DatabaseDao {
 	 * @param dbtype
 	 * @return
 	 */
-	public Class toJavaType(String dbtype) throws Exception;
+	public Class toJavaType(FieldBean bean, String dbtype) throws Exception;
 }

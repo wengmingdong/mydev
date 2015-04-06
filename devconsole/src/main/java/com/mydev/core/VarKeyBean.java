@@ -30,5 +30,4 @@ public class VarKeyBean {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
 }

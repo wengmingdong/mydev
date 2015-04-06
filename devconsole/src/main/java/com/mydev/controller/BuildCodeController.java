@@ -58,12 +58,12 @@ public class BuildCodeController {
 	}
 	
 	@RequestMapping("/create_code")
-	public ModelAndView createCode(String[] tableNames) {
+	public ModelAndView createCode(String creator, String pakage, String[] tableNames) {
 		logger.debug("create_code");
 		ModelAndView modelAndView = null;
 		try {
 			List<String> lsTableNames = Arrays.asList(tableNames);
-			buildCodeService.createCode(lsTableNames);
+			buildCodeService.createCode(creator, pakage, lsTableNames);
 			
 		} catch (Exception e) {
 			logger.error("createCode", e);

@@ -7,10 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mydev.core.TempBuilder;
+import com.mydev.core.VarKeyBean;
 import com.mydev.dao.DatabaseDao;
 import com.mydev.entity.FieldBean;
 import com.mydev.entity.TableBean;
@@ -51,21 +53,28 @@ public class BuildCodeServiceImpl implements BuildCodeService {
 	}
 	
 	@Override
-	public List<CreateCodeResultBean> createCode(List<String> tableNames) throws Exception {
+	public List<CreateCodeResultBean> createCode(String creater, String packageName, List<String> tableNames) throws Exception {
 		// TODO Auto-generated method stub
 		if (tableNames == null || tableNames.size() <= 0)
 			throw new Exception("没有可生成的表");
 		for (String tableName: tableNames) {
-			createCode(tableName);
+			createCode(creater, packageName, tableName);
 		}
 		return null;
 	}
 	@Override
-	public CreateCodeResultBean createCode(String tableName) throws Exception {
+	public CreateCodeResultBean createCode(String creater, String packageName, String tableName) throws Exception {
 		// TODO Auto-generated method stub
 		List<FieldBean> fields = databaseDao.getFields(tableName);
 		Map<String, Object> outMapKey = new HashMap<String, Object>();
-		outMapKey.put("bean", tableName);
+		VarKeyBean createrBean = new VarKeyBean(creater, "包", creater);
+		VarKeyBean package1 = new VarKeyBean(packageName, "包", packageName);
+		//规则
+		tableName = StringUtils.capitalize(tableName);
+		VarKeyBean bean = new VarKeyBean(tableName, "表", tableName);
+		outMapKey.put("creater", createrBean);
+		outMapKey.put("package", package1);
+		outMapKey.put("bean", bean);
 		outMapKey.put("fields", fields);
 		TempBuilder tempBuilder = new TempBuilder();	
 		tempBuilder.build(getFtlPath(), getOutPath(), outMapKey);		
@@ -73,11 +82,11 @@ public class BuildCodeServiceImpl implements BuildCodeService {
 	}
 	
 	protected String getFtlPath() {
-		return "E:/work/edu/project/code_factory/";
+		return "E:/mydev/git/devconsole/src/main/resources/temp/";
 	}
 	
 	protected String getOutPath() {
-		return "E:/work/edu/project/code_factory/target/";
+		return "E:/mydev/git/devconsole/target/classes/temp/target/";
 	}
 	
 	public DatabaseDao getDatabaseDao() {

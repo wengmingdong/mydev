@@ -15,6 +15,14 @@
             <div class="col-lg-6">
                 <form id="frmTables" role="form">
                 	<div class="form-group">
+                        <label>创建者</label>
+                        <input name="creator" class="form-control">                        
+                    </div>
+                    <div class="form-group">
+                        <label>java包</label>
+                        <input name="pakage" class="form-control">                        
+                    </div>
+                	<div class="form-group">
 <% 
 	for (TableBean tableBean: tables) {		
 %>

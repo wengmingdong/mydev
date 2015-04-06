@@ -3,6 +3,7 @@
  */
 package com.mydev.dao.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,8 @@ import com.mydev.entity.UserCustomField;
 public class CassandraDaoImpl implements DatabaseDao {
 	private static final Logger logger = LoggerFactory
 			.getLogger(CassandraDaoImpl.class);
+	private static final String DBLIST = "org.apache.cassandra.db.marshal.ListType";
+	private static final String DBMAP = "org.apache.cassandra.db.marshal.MapType";
 	private Cluster cluster;
 	private Session session;
 	
@@ -54,9 +57,12 @@ public class CassandraDaoImpl implements DatabaseDao {
 	static {
 		DBTYPE.put("org.apache.cassandra.db.marshal.UTF8Type", String.class);
 		DBTYPE.put("org.apache.cassandra.db.marshal.Int32Type", Integer.class);
-		DBTYPE.put("org.apache.cassandra.db.marshal.ListType", List.class);
-		DBTYPE.put("org.apache.cassandra.db.marshal.MapType", Map.class);
+		DBTYPE.put(DBLIST, List.class);
+		DBTYPE.put(DBMAP, Map.class);
 		DBTYPE.put("org.apache.cassandra.db.marshal.UserType", UserCustomField.class);
+		DBTYPE.put("org.apache.cassandra.db.marshal.BytesType", Byte[].class);
+		DBTYPE.put("org.apache.cassandra.db.marshal.LongType", Long.class);
+		DBTYPE.put("org.apache.cassandra.db.marshal.TimestampType", Timestamp.class);
 	}
 	
 	protected Session getSession() {
@@ -82,7 +88,7 @@ public class CassandraDaoImpl implements DatabaseDao {
 	}
 	
 	@Override
-	public Class toJavaType(String dbtype) throws Exception {
+	public Class toJavaType(FieldBean bean, String dbtype) throws Exception {
 		// TODO Auto-generated method stub
 		if (StringUtils.isEmpty(dbtype))
 			throw new Exception("dbtype param is null");		
@@ -91,11 +97,24 @@ public class CassandraDaoImpl implements DatabaseDao {
 			//用户自定义类型
 			if (dbtype.indexOf("org.apache.cassandra.db.marshal.UserType") >= 0) {
 				javaCls = UserCustomField.class;
+			} else if (dbtype.indexOf(DBLIST) >= 0) {
+				String subDbtype = dbtype.substring(DBLIST.length() + 1, dbtype.length() - 1);
+				Class subClass = toJavaType(bean, subDbtype);
+				javaCls = List.class;
+				bean.setFieldTypeStr("List<" + subClass.getSimpleName() + ">");
+			} else if (dbtype.indexOf(DBMAP) >= 0) {
+				String subDbtype = dbtype.substring(DBMAP.length() + 1, dbtype.length() - 1);
+				String[] subDbtypes = subDbtype.split(",");
+				Class subClassKey = toJavaType(bean, subDbtypes[0]);
+				Class subClassVal = toJavaType(bean, subDbtypes[1]);
+				bean.setFieldTypeStr("Map<" + subClassKey.getSimpleName() + "," + subClassVal.getSimpleName() + ">");
 			} else 
 				throw new Exception(dbtype + " javaClass  is null");
 		} 
+		bean.setFieldType(javaCls);
 		return javaCls;
 	}
+	
 		 
 	public void close() {
 		 session.close();
@@ -137,13 +156,31 @@ public class CassandraDaoImpl implements DatabaseDao {
 		List<FieldBean>rt = new ArrayList<FieldBean>();
 		for (Row row: rows) {
 			FieldBean bean = new FieldBean();
-			bean.setFieldName(row.getString("column_name"));
+			bean.setFieldName(fieldNameDelUnderline(row.getString("column_name")));
 			//bean.setFieldType(fieldType);
 			String dbtype = row.getString("validator");
-			bean.setFieldType(toJavaType(dbtype));
+			toJavaType(bean, dbtype);
+			bean.setComment("请注解");
 			rt.add(bean);
 		}
 		return rt;
+	}
+	
+	protected String fieldNameDelUnderline(String fieldName) {
+		String[] fieldNameArr = fieldName.split("_");
+		if (fieldNameArr.length <= 0)
+			return fieldName;
+		StringBuilder rt = new StringBuilder();
+		int i = 0;
+		for (String s: fieldNameArr) {
+			if (i == 0) {
+				rt.append(s);
+			} else { 
+				rt.append(StringUtils.capitalize(s));
+			}
+			i++;
+		}
+		return rt.toString();
 	}
 	
 	public void validSession() throws Exception {

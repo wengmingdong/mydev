@@ -11,7 +11,12 @@
 			<name>代码目标路径</name>
 			<value></value>
 		</key>
-
+		<key>
+			<id>XXEntity.java.ftl</id>
+			<desc>生成文件所在文件夹</desc>
+			<name>XXEntity.java.ftl</name>
+			<value>entity/${bean.value}.java</value>
+		</key>
 		<key>
 			<id>IXXService.java.ftl</id>
 			<desc>生成文件所在文件夹</desc>
@@ -35,18 +40,6 @@
 			<desc>生成文件所在文件夹</desc>
 			<name>XXDao.java.ftl</name>
 			<value>dao/${bean.value}Dao.java</value>
-		</key>
-		<key>
-			<id>XX.js.ftl</id>
-			<desc>生成文件所在文件夹</desc>
-			<name>XX.js.ftl</name>
-			<value>js/${bean.value}.js</value>
-		</key>
-		<key>
-			<id>XX.shtml.ftl</id>
-			<desc>生成文件所在文件夹</desc>
-			<name>XX.shtml.ftl</name>
-			<value>shtml/${bean.value}.shtml</value>
 		</key>
 	</keys>
 </root>
