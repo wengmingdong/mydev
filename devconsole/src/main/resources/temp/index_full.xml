@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<keys>
+		<key>
+			<id>table</id>
+			<name>表</name>
+		</key>
+		
+		<key>
+			<id>targetProject</id>
+			<name>代码目标路径</name>
+			<value></value>
+		</key>
+		
+		<key>
+			<id>creater</id>
+			<name>bean名称</name>
+			<value>wengmd</value>
+		</key>
+		
+		<key>
+			<id>bean</id>
+			<name>bean名称</name>
+			<value>MyBean</value>
+		</key>
+		<key>
+			<id>package</id>
+			<name>bean名称</name>
+			<value>mypackage</value>
+		</key>
+
+		<key>
+			<id>IXXService.java.ftl</id>
+			<desc>生成文件所在文件夹</desc>
+			<name>IXXService.java.ftl</name>
+			<value>service/I${bean.value}Service.java</value>
+		</key>
+		<key>
+			<id>XXService.java.ftl</id>
+			<desc>生成文件所在文件夹</desc>
+			<name>XXService.java.ftl</name>
+			<value>service/impl/${bean.value}Service.java</value>
+		</key>
+		<key>
+			<id>XXController.java.ftl</id>
+			<desc>生成文件所在文件夹</desc>
+			<name>XXController.java.ftl</name>
+			<value>ctrl/${bean.value}Controller.java</value>
+		</key>
+		<key>
+			<id>XXDao.java.ftl</id>
+			<desc>生成文件所在文件夹</desc>
+			<name>XXDao.java.ftl</name>
+			<value>dao/${bean.value}Dao.java</value>
+		</key>
+		<key>
+			<id>XX.js.ftl</id>
+			<desc>生成文件所在文件夹</desc>
+			<name>XX.js.ftl</name>
+			<value>js/${bean.value}.js</value>
+		</key>
+		<key>
+			<id>XX.shtml.ftl</id>
+			<desc>生成文件所在文件夹</desc>
+			<name>XX.shtml.ftl</name>
+			<value>shtml/${bean.value}.shtml</value>
+		</key>
+	</keys>
+</root>
